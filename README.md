@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Daridash — AI Real Estate Dashboard (Morocco)
 
-## Getting Started
+A portfolio project: an AI-assisted real estate market dashboard focused on Moroccan cities, built with Next.js and Supabase.
 
-First, run the development server:
+Currently runs on **seeded demo data** (240 synthetic listings across Casablanca, Rabat, Marrakech, Tanger, Agadir, and Fès) — clearly labeled in the UI — while the real-data pipeline (a working Mubawab.ma scraper is already built in `src/scrapers/`) is wired up separately.
+
+## Features
+
+- **Overview** — market KPIs and charts (avg price/m² by city, price distribution, property type mix, sale vs. rent split)
+- **Listings** — grid, table, and map views with filters, favorites, and a compare tool
+- **Fair-value score** — a deterministic (non-LLM) price/m² comparison against neighborhood and city medians
+- **AI assistant** — a chat assistant (Claude via the Vercel AI SDK) grounded in the actual listings and market-stats data
+- **Command palette** (⌘K) — jump to any page or listing
+- A generated zellige-tile pattern stands in for listing photos (no real photos exist for synthetic listings), colored by property type; real Unsplash photos are used as well
+
+## Stack
+
+Next.js (App Router) · TypeScript · Tailwind CSS · shadcn/ui · Supabase (Postgres) · Vercel AI SDK + Claude · Leaflet
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copy `.env.example` to `.env.local` and fill in:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` — from your Supabase project settings
+- `SUPABASE_SERVICE_ROLE_KEY` — only needed to run the scraper (`pnpm scrape:mubawab`)
+- `ANTHROPIC_API_KEY` — needed for the `/assistant` chat page
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Database schema and seed data live in `supabase/migrations/` and `supabase/seed.sql`.
