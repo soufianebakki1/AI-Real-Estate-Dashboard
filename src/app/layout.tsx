@@ -37,12 +37,20 @@ export const metadata: Metadata = {
 };
 
 async function hasSeedData(): Promise<boolean> {
-  const supabase = createBrowserClient();
-  const { count } = await supabase
-    .from("listings")
-    .select("id", { count: "exact", head: true })
-    .eq("source", "seed");
-  return (count ?? 0) > 0;
+  // Defensive: this runs in the root layout, which Next also renders while
+  // statically prerendering fallback pages like /_not-found at build time —
+  // a context where env vars (or the DB) may not be available. Never let
+  // that crash the whole build; just skip the banner if we can't tell.
+  try {
+    const supabase = createBrowserClient();
+    const { count } = await supabase
+      .from("listings")
+      .select("id", { count: "exact", head: true })
+      .eq("source", "seed");
+    return (count ?? 0) > 0;
+  } catch {
+    return false;
+  }
 }
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
